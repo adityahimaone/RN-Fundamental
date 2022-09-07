@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import React, { useState, useEffect, useMemo } from "react";
+import { StyleSheet, View, Alert } from "react-native";
 import NumberContainer from "../components/game/NumberContainer";
 import PrimaryButton from "../components/UI/PrimaryButton";
 import Title from "../components/UI/Title";
+import Card from "../components/UI/Card";
+import InstructionText from "../components/UI/InstructionText";
 
 const generateRandomBetween = (min, max, exclude) => {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -17,18 +19,18 @@ const generateRandomBetween = (min, max, exclude) => {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-const GameScreen = ({ userChoice }) => {
-  const initialGuess = generateRandomBetween(
-    minBoundary,
-    maxBoundary,
-    userChoice
+const GameScreen = ({ userChoice, onGameOver }) => {
+  const initialGuess = useMemo(
+    () => generateRandomBetween(minBoundary, maxBoundary, userChoice),
+    [userChoice]
   );
-  const [currentGuest, setCurrentGuest] = useState(initialGuess);
+
+  const [currentGuess, setCurrentGuest] = useState(initialGuess);
 
   const nextGuessHandler = (direction) => {
     if (
-      (direction === "lower" && currentGuest < userChoice) ||
-      (direction === "greater" && currentGuest > userChoice)
+      (direction === "lower" && currentGuess < userChoice) ||
+      (direction === "greater" && currentGuess > userChoice)
     ) {
       Alert.alert("Don't lie!", "You know that this is wrong...", [
         { text: "Sorry!", style: "cancel" },
@@ -37,18 +39,18 @@ const GameScreen = ({ userChoice }) => {
     }
 
     if (direction === "lower") {
-      maxBoundary = currentGuest;
+      maxBoundary = currentGuess;
     } else {
-      minBoundary = currentGuest + 1;
+      minBoundary = currentGuess + 1;
     }
     console.log(minBoundary, maxBoundary);
     const newRndNumber = generateRandomBetween(
       minBoundary,
       maxBoundary,
-      currentGuest
+      currentGuess
     );
 
-    if (currentGuest === userChoice) {
+    if (currentGuess === userChoice) {
       Alert.alert("Game Over", "You won the game!", [
         { text: "Play again", onPress: () => {} },
       ]);
@@ -57,14 +59,22 @@ const GameScreen = ({ userChoice }) => {
     setCurrentGuest(newRndNumber);
   };
 
+  useEffect(() => {
+    if (currentGuess === userChoice) {
+      onGameOver();
+    }
+  }, [currentGuess, userChoice, onGameOver]);
+
   return (
     <View style={styles.screen}>
       <View>
         <Title>Opponent's Guess</Title>
-        <NumberContainer>{currentGuest}</NumberContainer>
+        <NumberContainer>{currentGuess}</NumberContainer>
       </View>
-      <View>
-        <Text>H or L</Text>
+      <Card>
+        <InstructionText style={styles.instructionText}>
+          Higher or Lower?
+        </InstructionText>
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
@@ -77,7 +87,7 @@ const GameScreen = ({ userChoice }) => {
             </PrimaryButton>
           </View>
         </View>
-      </View>
+      </Card>
     </View>
   );
 };
@@ -89,6 +99,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     padding: 24,
+  },
+  instructionText: {
+    marginBottom: 12,
   },
   buttonsContainer: {
     flexDirection: "row",
