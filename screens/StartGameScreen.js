@@ -5,6 +5,7 @@ import Colors from "../constants/colors";
 import Title from "../components/UI/Title";
 import Card from "../components/UI/Card";
 import InstructionText from "../components/UI/InstructionText";
+import { Ionicons } from "@expo/vector-icons";
 
 const StartGameScreen = ({ onPickNumber }) => {
   const [enteredNumber, setEnteredNumber] = useState("");
@@ -46,10 +47,26 @@ const StartGameScreen = ({ onPickNumber }) => {
         />
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
+            <PrimaryButton onPress={resetInputHandler}>
+              Reset
+              <Ionicons
+                style={styles.icons}
+                name="md-refresh"
+                size={18}
+                color="white"
+              />
+            </PrimaryButton>
           </View>
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
+            <PrimaryButton onPress={confirmInputHandler}>
+              Confirm
+              <Ionicons
+                style={styles.icons}
+                name="md-checkmark"
+                size={18}
+                color="white"
+              />
+            </PrimaryButton>
           </View>
         </View>
       </Card>
@@ -82,5 +99,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+  },
+  icons: {
+    paddingLeft: 12,
   },
 });
