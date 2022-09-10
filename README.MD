@@ -3,7 +3,7 @@
 Components, Layouts, & Styling
 
 ### Components
-- View
+- FlatList
 - Background Image
 - Save Area View
 - Splash Screen (expo install expo-app-loading : deprecated) -> (expo install expo-splash-screen)
