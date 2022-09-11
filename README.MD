@@ -9,7 +9,7 @@ Adaptive User Interfaces
 - Background Image
 - Save Area View
 - Splash Screen (expo install expo-app-loading : deprecated) -> (expo install expo-splash-screen)
-- Dimension 
+- Dimensions + useWindowDimensions (hooks)
 
 ### Styling Android & IOS
 - Icons (@expo/vector-icons)
